@@ -1,13 +1,13 @@
 ---
 name: log-reader
-description: Analiza logs pegados o adjuntos de cualquier stack técnico (Windows Event Log, servidores web nginx/Apache/Tomcat, Spring Boot, Quarkus, .NET/C#, bases de datos PostgreSQL/Oracle/SQL Server, Kafka, OpenShift, IBM API Connect, nube Azure/AWS/GCP, o alertas/monitorización SRE) y produce un diagnóstico técnico estructurado. Detecta automáticamente la tecnología a partir de patrones en el propio log, pregunta por el contexto que no puede inferirse (entorno, versión, rol del servidor, etc.) antes de diagnosticar, y marca en rojo cualquier dato sensible sin ocultarlo. Usar siempre que el usuario pegue o adjunte un log, stack trace, evento de Windows, alerta de Prometheus/PagerDuty, o pida "analiza este log", "qué significa este error", "por qué falla este servicio/pod/aplicación", aunque no mencione explícitamente la tecnología.
+description: Analiza logs pegados o adjuntos de cualquier stack técnico (Windows Event Log, servidores web nginx/Apache/Tomcat/IIS, Spring Boot, Quarkus, .NET/C#, PHP, Laravel, bases de datos PostgreSQL/Oracle/SQL Server, Kafka, Kubernetes/OpenShift, IBM API Connect, MinIO, Docker, nube Azure/AWS/GCP, o alertas/monitorización SRE) y produce un diagnóstico técnico estructurado. Detecta automáticamente la tecnología a partir de patrones en el propio log, pregunta por el contexto que no puede inferirse (entorno, versión, rol del servidor, etc.) antes de diagnosticar, y marca en rojo cualquier dato sensible sin ocultarlo. Usar siempre que el usuario pegue o adjunte un log, stack trace, evento de Windows, alerta de Prometheus/PagerDuty, o pida "analiza este log", "qué significa este error", "por qué falla este servicio/pod/aplicación", aunque no mencione explícitamente la tecnología.
 ---
 
 # Log Reader — Agente unificado de análisis de logs
 
 ## Propósito
 
-Este skill reemplaza a un conjunto de 11 agentes especializados (uno por tecnología) por un único flujo: detectar la tecnología del log, cargar únicamente la guía de esa tecnología, pedir el contexto que no se puede inferir del texto, y producir un reporte de diagnóstico estandarizado. Nunca asume lo que el log no dice, y nunca oculta datos sensibles — los marca para que el responsable del análisis decida si comparte el reporte.
+Este skill reemplaza a un conjunto de agentes especializados (uno por tecnología) por un único flujo: detectar la tecnología del log, cargar únicamente la guía de esa tecnología, pedir el contexto que no se puede inferir del texto, y producir un reporte de diagnóstico estandarizado. Nunca asume lo que el log no dice, y nunca oculta datos sensibles — los marca para que el responsable del análisis decida si comparte el reporte.
 
 ## Flujo de trabajo
 
@@ -33,14 +33,18 @@ Busca estas señales distintivas en el log. Están ordenadas por especificidad: 
 | Tecnología                                           | Señales distintivas                                                                                                                                                                                                                                               | Referencia                        |
 | ---------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------------------------------- |
 | **Windows Server Event Log**                         | Campos `Event ID` / `Source` / `Level` / `Task Category`; canales `Application`, `System`, `Security`, `Setup`; proveedores como `Microsoft-Windows-Kernel-Power`, `Service Control Manager`, `Microsoft-Windows-Security-Auditing`; extensión `.evtx` mencionada | `references/windows-event-log.md` |
-| **Web Server (nginx / Apache httpd / Tomcat)**       | Formato combined log (`$remote_addr ... "$request" $status`); `[error] PID#TID: *connection_id`; códigos `AH0XXXX`; `catalina.out`, `org.apache.catalina`, `SEVERE [main]`                                                                                        | `references/web-server.md`        |
+| **Web Server (nginx / Apache httpd / Tomcat / IIS)** | Formato combined log (`$remote_addr ... "$request" $status`); `[error] PID#TID: *connection_id`; códigos `AH0XXXX`; `catalina.out`, `org.apache.catalina`, `SEVERE [main]`; IIS: formato W3C Extended con `sc-substatus`/`sc-win32-status`, `w3wp.exe`, `HTTP Error 5XX.YY` | `references/web-server.md`        |
 | **Spring Boot**                                      | `org.springframework`, loggers abreviados `o.s.*`, `o.a.c.c.C.[.[.[/]`, formato `LEVEL PID --- [thread] logger : mensaje`                                                                                                                                         | `references/spring-boot.md`       |
 | **Quarkus**                                          | `io.quarkus`, `io.quarkus.arc`, formato `LEVEL [category] (thread-name) mensaje`, códigos `SRCFG`                                                                                                                                                                 | `references/quarkus.md`           |
 | **.NET / C#**                                        | `System.NullReferenceException` y demás `System.*Exception`, `Microsoft.AspNetCore`, formato `info:`/`warn:`/`fail:` de MEL, Serilog (`[ERR]`), NLog (`\|ERROR\|`), log4net                                                                                       | `references/dotnet.md`            |
+| **PHP**                                              | `PHP Fatal error:`/`PHP Warning:`/`PHP Deprecated:`/`PHP Parse error:`, `Stack trace:` seguido de `#0 {main}`, formato de pool `[pool www]` de php-fpm — sin señales de Laravel                                                                                   | `references/php.md`               |
+| **Laravel**                                          | `Illuminate\`, ruta `storage/logs/laravel.log`, formato `[YYYY-MM-DD HH:MM:SS] entorno.NIVEL: mensaje`, menciones a Artisan/Eloquent/Horizon/Octane                                                                                                               | `references/laravel.md`           |
 | **Base de datos (PostgreSQL / Oracle / SQL Server)** | PostgreSQL: `USUARIO@BASE_DATOS SEVERIDAD:`, `DETAIL:`/`HINT:`/`STATEMENT:`. Oracle: códigos `ORA-XXXXX`, `alert_<SID>.log`. SQL Server: `spid`, `Error: NNNN, Severity: NN`                                                                                      | `references/database.md`          |
 | **Kafka**                                            | `kafka.server`, `kafka.controller`, `org.apache.kafka.clients`, menciones a ISR/broker/ZooKeeper/KRaft, formato `[timestamp] LEVEL mensaje (logger.name)`                                                                                                         | `references/kafka.md`             |
-| **OpenShift**                                        | Comandos `oc get/describe/logs`, recursos `Project`, `Route`, `DeploymentConfig`, `BuildConfig`, `SCC`, estados `CrashLoopBackOff`, `ImagePullBackOff`, `OOMKilled` en contexto de pods                                                                           | `references/openshift.md`         |
+| **Docker**                                           | `Cannot connect to the Docker daemon`, `docker-compose.yml`/`compose.yaml`, `dockerd`/`containerd`, prefijo de Compose `<servicio>-<n> \|`, `docker build`/BuildKit — sin recursos de Kubernetes (`Pod`, `Deployment`)                                             | `references/docker.md`            |
+| **Kubernetes / OpenShift**                           | Comandos `kubectl`/`oc get/describe/logs`, recursos `Pod`/`Deployment`/`Ingress` (vanilla) o `Project`/`Route`/`DeploymentConfig`/`BuildConfig`/`SCC` (OpenShift), estados `CrashLoopBackOff`, `ImagePullBackOff`, `OOMKilled` en contexto de pods                | `references/kubernetes.md`        |
 | **IBM API Connect**                                  | `DataPower`, códigos `0x00d3XXXX`, headers `X-IBM-Client-Id`/`X-IBM-Client-Secret`, mención de "assembly", "catalog", "gateway service"                                                                                                                           | `references/ibm-api-connect.md`   |
+| **MinIO**                                            | Mención de `minio`, header `X-Amz-Request-Id`/`X-Minio-*`, códigos S3 (`NoSuchBucket`, `AccessDenied`, `SignatureDoesNotMatch`), comandos `mc admin`                                                                                                              | `references/minio.md`             |
 | **Cloud (Azure / AWS / GCP)**                        | ARNs (`arn:aws:...`), `AKIA...`, CloudWatch/CloudTrail/Lambda `REQUEST ID`; Azure `AADSTS`, Application Insights JSON (`severityLevel`, `customDimensions`); GCP `jsonPayload`, `resource.type`, Cloud Run/GKE                                                    | `references/cloud.md`             |
 | **SRE / Monitorización**                             | Reglas PromQL (`expr:`, `for:`), alertas de AlertManager/Grafana, notificaciones PagerDuty/OpsGenie (`[ALERT FIRING]`, `severity:`), lenguaje de SLO/error budget/burn rate                                                                                       | `references/sre-monitoring.md`    |
 
@@ -187,16 +191,20 @@ Si el usuario confirma que quiere el documento entregable, genera un archivo (us
 
 ## Archivos de referencia
 
-Carga solo el archivo correspondiente a la tecnología detectada — no cargues los 11 de una vez:
+Carga solo el archivo correspondiente a la tecnología detectada — no los cargues todos de una vez:
 
 - `references/windows-event-log.md`
 - `references/web-server.md`
 - `references/spring-boot.md`
 - `references/quarkus.md`
 - `references/dotnet.md`
+- `references/php.md`
+- `references/laravel.md`
 - `references/database.md`
 - `references/kafka.md`
-- `references/openshift.md`
+- `references/docker.md`
+- `references/kubernetes.md`
 - `references/ibm-api-connect.md`
+- `references/minio.md`
 - `references/cloud.md`
 - `references/sre-monitoring.md`

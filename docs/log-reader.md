@@ -4,7 +4,7 @@
 
 `log-reader` es un skill de análisis de logs que reemplaza a un conjunto de agentes especializados (uno por tecnología) por un único flujo. Cuando se le pega o adjunta un log, stack trace, evento de Windows o alerta de monitorización:
 
-1. Detecta automáticamente la tecnología a partir de patrones en el propio texto (Windows Event Log, nginx/Apache/Tomcat, Spring Boot, Quarkus, .NET/C#, bases de datos, Kafka, OpenShift, IBM API Connect, Azure/AWS/GCP, o alertas SRE).
+1. Detecta automáticamente la tecnología a partir de patrones en el propio texto (Windows Event Log, nginx/Apache/Tomcat/IIS, Spring Boot, Quarkus, .NET/C#, PHP, Laravel, bases de datos, Kafka, Docker, Kubernetes/OpenShift, IBM API Connect, MinIO, Azure/AWS/GCP, o alertas SRE).
 2. Si hay ambigüedad, pregunta antes de analizar en vez de adivinar.
 3. Carga únicamente la guía de referencia de esa tecnología (`skills/log-reader/references/<tecnologia>.md`), no las 11 de una vez.
 4. Pregunta el contexto que no se puede inferir del texto (entorno, versión, rol del componente, si el log está truncado).

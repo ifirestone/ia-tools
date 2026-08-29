@@ -1,16 +1,17 @@
-# Referencia: Web Server (nginx / Apache httpd / Tomcat)
+# Referencia: Web Server (nginx / Apache httpd / Tomcat / IIS)
 
 ## Alcance y formatos
 
 - **nginx access log** (combined): `$remote_addr - $remote_user [$time_local] "$request" $status $body_bytes_sent "$referer" "$user_agent"`. **error log**: `YYYY/MM/DD HH:mm:ss [level] PID#TID: *connection_id message, client: IP, server: HOST, request: "...", upstream: "URL"`.
 - **Apache httpd access log** (combined) similar a nginx. **error log**: `[Day Mon DD HH:mm:ss.microseconds YYYY] [module:level] [pid PID:tid TID] message` — códigos `AH0XXXX`.
 - **Tomcat**: `catalina.out`/`catalina.log` formato `DD-Mon-YYYY HH:mm:ss.SSS LEVEL [thread-name] org.apache.tomcat.Clase Mensaje`; `localhost_access_log` similar a Apache con `%D` = ms de procesamiento.
+- **IIS**: application pools corriendo como procesos `w3wp.exe`, modo Integrated o Classic, ASP.NET Core Module (ANCM) in-process u out-of-process para apps .NET moderno. **access log** en formato W3C Extended (configurable, columnas típicas): `date time s-ip cs-method cs-uri-stem cs-uri-query s-port cs-username c-ip cs(User-Agent) sc-status sc-substatus sc-win32-status time-taken`. Los errores de arranque/configuración no quedan en ese log sino como `HTTP Error 5XX.YY` en el navegador/Failed Request Tracing (FREB, XML), y los crashes de `w3wp.exe` aparecen en el **Event Viewer** (Application/System), no en el log de IIS.
 
 ## Preguntar antes de interpretar
 
 | Situación | Pregunta |
 |---|---|
-| Servidor no identificado | ¿nginx, Apache httpd o Tomcat? Los formatos y patrones son muy diferentes |
+| Servidor no identificado | ¿nginx, Apache httpd, Tomcat o IIS? Los formatos y patrones son muy diferentes |
 | Solo access log | ¿Tienes el error log también? El access dice qué pasó; el error dice por qué |
 | Proxy con backend poco claro | ¿Es reverse proxy hacia un backend? ¿Tienes logs de ese backend? |
 | Entorno no declarado | ¿DEV, QA, STAGING o PROD? |
@@ -19,10 +20,14 @@
 | 502/504 recurrentes sin logs de upstream | ¿Tienes logs del servicio upstream al que se proxea? |
 | Tiempos elevados sin correlación de error | ¿Tienes métricas de CPU/memoria/disco de ese período? |
 | Tomcat menciona webapp sin identificar | ¿Cuál es la aplicación/context afectada? |
+| IIS: versión no indicada | ¿IIS 8.5 o 10? |
+| IIS: modo del App Pool no claro | ¿Integrated o Classic? |
+| IIS: stack .NET no claro | ¿.NET Framework clásico, o .NET Core/.NET moderno vía ANCM (in-process u out-of-process)? |
+| IIS: solo hay el HTTP Error en pantalla | ¿Está habilitado Failed Request Tracing (FREB)? Sin eso, un 500.19/502.3 casi no trae detalle propio |
 
 ## Datos sensibles específicos
 
-IPs de clientes (PII/GDPR en PROD); URLs con parámetros sensibles (`?password=`, `?token=`); tokens en query strings (mala práctica — quedan en logs y caché de proxies, señálalo como riesgo); headers logueados (`Authorization`, `Cookie`); IPs de upstreams internos (revelan arquitectura); stack traces de Tomcat con IDs de transacción o datos de usuario.
+IPs de clientes (PII/GDPR en PROD); URLs con parámetros sensibles (`?password=`, `?token=`); tokens en query strings (mala práctica — quedan en logs y caché de proxies, señálalo como riesgo); headers logueados (`Authorization`, `Cookie`); IPs de upstreams internos (revelan arquitectura); stack traces de Tomcat con IDs de transacción o datos de usuario; IIS: `cs-username` (usuario Windows/AD autenticado en la request), `cs-uri-query` con tokens/passwords, rutas de archivo internas del servidor expuestas en el detalle de un `500.19`.
 
 ## nginx — patrones de error
 
@@ -40,6 +45,10 @@ Access log: revisar distribución de status 4xx/5xx por endpoint, `$request_time
 
 Si hay GC logs: Full GC frecuente = presión de memoria; pause > 1s puede causar timeouts.
 
+## IIS — patrones de error
+
+`HTTP Error 500.19 - Internal Server Error` → `web.config` mal formado (XML inválido) o sin permisos ACL para que el App Pool lo lea; el detalle trae la ruta del archivo de configuración exacto. `500.21`/`500.22` → módulo de configuración no registrado o registrado dos veces (`applicationHost.config` vs `web.config`). `502.3 Bad Gateway` (con ANCM) → el proceso backend (Kestrel, en apps .NET Core/.NET modernas) no respondió o crasheó al arrancar — revisar el stdout log de ANCM (`stdoutLogEnabled`/`stdoutLogFile` en `web.config`), no el log de IIS. `500.30 - ASP.NET Core app failed to start` → la app nunca llegó a levantar Kestrel, mismo lugar para revisar (stdout log de ANCM). `HTTP Error 503 Service Unavailable` → el Application Pool está detenido o fue reciclado/deshabilitado tras crashes repetidos (Rapid-Fail Protection) — revisar el Event Log `IIS-W3SVC-WP` o `IIS AspNetCore Module`. `sc-win32-status` distinto de `0` en el access log → hay un error de Windows subyacente a ese request (ej. `5` = acceso denegado, `64` = el nombre de red ya no está disponible), buscar ese código específico. Reciclajes de App Pool por límite de memoria o tiempo configurado (`Recycling Application Pool` en el Event Log) → pueden explicar caídas periódicas de sesión, no necesariamente un bug de la app. Crash de `w3wp.exe` sin nada en el log de IIS → buscar en Event Viewer → Windows Logs → Application, filtrando por el ID del proceso o por "Application Error"/".NET Runtime".
+
 ## Reglas de correlación
 
 No diagnostiques un 502/504 solo con el access log — pide el error log del servidor y, si aplica, los logs del upstream.
@@ -53,3 +62,6 @@ No diagnostiques un 502/504 solo con el access log — pide el error log del ser
 - Tomcat docs: https://tomcat.apache.org/tomcat-10.1-doc/
 - Tomcat logging: https://tomcat.apache.org/tomcat-10.1-doc/logging.html
 - JVM troubleshooting: https://docs.oracle.com/en/java/javase/17/troubleshoot/
+- IIS docs: https://learn.microsoft.com/en-us/iis/
+- ASP.NET Core Module (ANCM) troubleshooting: https://learn.microsoft.com/en-us/aspnet/core/test/troubleshoot-azure-iis
+- W3C Extended log format: https://learn.microsoft.com/en-us/windows/win32/http/w3c-logging

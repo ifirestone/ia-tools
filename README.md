@@ -42,7 +42,7 @@ ChatGPT no lee carpetas de skills. Para usar uno de estos skills ahí:
 
 **Invocables por el modelo** (se activan solos cuando la conversación matchea su `description`, o los invocas con `/nombre`):
 
-- **[log-reader](./skills/log-reader/SKILL.md)**: analiza logs pegados o adjuntos de once stacks técnicos distintos (Windows Event Log, servidores web, Spring Boot, Quarkus, .NET, bases de datos, Kafka, OpenShift, IBM API Connect, nube, SRE/monitorización), detecta la tecnología automáticamente, pregunta el contexto que no puede inferir, y produce un reporte de diagnóstico estandarizado sin ocultar datos sensibles. Doc para humanos: [docs/log-reader.md](./docs/log-reader.md).
+- **[log-reader](./skills/log-reader/SKILL.md)**: analiza logs pegados o adjuntos de múltiples stacks técnicos (Windows Event Log, servidores web nginx/Apache/Tomcat/IIS, Spring Boot, Quarkus, .NET, PHP, Laravel, bases de datos, Kafka, Docker, Kubernetes/OpenShift, IBM API Connect, MinIO, nube, SRE/monitorización), detecta la tecnología automáticamente, pregunta el contexto que no puede inferir, y produce un reporte de diagnóstico estandarizado sin ocultar datos sensibles. Doc para humanos: [docs/log-reader.md](./docs/log-reader.md).
 
 ## Agentes
 
