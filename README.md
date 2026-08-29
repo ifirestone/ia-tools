@@ -1,126 +1,57 @@
-# IA Agents - Log Readers
+# ia-tools
 
-Este repositorio reúne una colección de plantillas y guías operativas para agentes de análisis de logs en distintos stacks y entornos tecnológicos. Su propósito es ayudar a interpretar archivos de log, detectar patrones de error, identificar causas probables y generar reportes estructurados con foco en diagnóstico técnico y seguridad.
+Una colección de **skills y agentes de contexto** para usar con distintos harnesses de IA: Claude Code, Codex u otros agentes compatibles con el estándar abierto [Agent Skills](https://agentskills.io), y de forma manual en ChatGPT (que no tiene un mecanismo nativo de carga de skills).
 
-## Objetivo
+Cada skill vive en `skills/<nombre>/SKILL.md`: instrucciones que el modelo carga automáticamente cuando la conversación lo amerita, o que puedas invocar a mano con `/nombre`. El contenido de referencia largo por tema queda en `skills/<nombre>/references/`, para no cargarlo todo de una.
 
-El repositorio está pensado para apoyar procesos de:
+## Instalación
 
-- análisis de incidentes operativos
-- diagnóstico de fallas en aplicaciones y plataformas
-- revisión de logs de infraestructura y runtime
-- identificación de errores recurrentes y anomalías
-- generación de reportes accionables para soporte, QA o operaciones
+### Claude Code
 
-Cada archivo dentro de `log-readers/` describe un agente especializado para un tipo de log concreto.
+Como plugin, registrando este repo como su propio marketplace:
 
-## Estructura del repositorio
-
-```text
-ia-agents/
-├── README.md
-├── log-readers/
-│   ├── dotnet-log-reader-agent.md
-│   ├── ejemplo-reporte-quarkus-log-reader.md
-│   ├── ibm-apiconnect-log-reader-agent.md
-│   ├── openshift-log-reader-agent.md
-│   ├── quarkus-log-reader-agent.md
-│   └── windows-server-eventlog-reader-agent.md
-└── .gitignore
+```bash
+claude plugin marketplace add ifirestone/ia-tools
+claude plugin install ia-tools
 ```
 
-## Agentes incluidos
+Para probarlo en local sin instalarlo, sin necesidad de un marketplace:
 
-### .NET / C# Log Reader Agent
-Archivo: `log-readers/dotnet-log-reader-agent.md`
+```bash
+claude --plugin-dir /ruta/a/ia-tools
+```
 
-- Recomendado para analizar logs de aplicaciones .NET / C#
-- Cubre ASP.NET Core, Serilog, NLog, log4net, Entity Framework y errores de runtime
-- Incluye reglas sobre manejo de datos sensibles y reportes estructurados
+### Codex y otros harnesses compatibles con Agent Skills
 
-### Quarkus Log Reader Agent
-Archivo: `log-readers/quarkus-log-reader-agent.md`
+Ejecuta el script incluido, que symlinkea cada skill del repo a `~/.agents/skills` (y de paso a `~/.claude/skills`):
 
-- Orientado a aplicaciones Java con Quarkus
-- Analiza errores de configuración, CDI, acceso a BD, red y runtime JVM
-- Define patrones frecuentes y buenas prácticas de diagnóstico
+```bash
+./scripts/link-skills.sh
+```
 
-### IBM API Connect Log Reader Agent
-Archivo: `log-readers/ibm-apiconnect-log-reader-agent.md`
+Como son symlinks hacia este repo, un `git pull` alcanza para tener las skills siempre al día. También puedes copiar a mano la carpeta `skills/<nombre>/` que te interese a donde tu harness espere sus skills.
 
-- Especializado en logs de IBM API Connect y DataPower
-- Analiza fallas en políticas, OAuth, JWT, timeouts, TLS y errores de backend
-- Incluye referencias para API Gateway y API Manager
+### ChatGPT
 
-### OpenShift Log Reader Agent
-Archivo: `log-readers/openshift-log-reader-agent.md`
+ChatGPT no lee carpetas de skills. Para usar uno de estos skills ahí:
 
-- Diseñado para análisis de logs en Red Hat OpenShift
-- Considera errores de pods, SCC, ImagePullBackOff, CrashLoopBackOff, eventos del namespace y scheduling
-- Enfocado en diagnóstico operativo de infraestructura Kubernetes/OCP
+1. Abrí `skills/<nombre>/SKILL.md` y pega su contenido como instrucciones personalizadas de un Proyecto o de un GPT personalizado.
+2. Si el skill tiene `references/`, subí esos archivos como archivos de conocimiento del mismo Proyecto/GPT (ChatGPT los busca cuando hacen falta, en vez de cargarlos todos de una).
 
-### Windows Server Event Log Reader Agent
-Archivo: `log-readers/windows-server-eventlog-reader-agent.md`
+## Skills
 
-- Revisa eventos del Event Log de Windows Server
-- Analiza System, Application, Security y fuentes de eventos de servicios
-- Es útil para incidentes de sistema, servicios, seguridad y crashes de aplicaciones
+**Invocables por el modelo** (se activan solos cuando la conversación matchea su `description`, o los invocas con `/nombre`):
 
-### Ejemplo de reporte Quarkus
-Archivo: `log-readers/ejemplo-reporte-quarkus-log-reader.md`
+- **[log-reader](./skills/log-reader/SKILL.md)**: analiza logs pegados o adjuntos de once stacks técnicos distintos (Windows Event Log, servidores web, Spring Boot, Quarkus, .NET, bases de datos, Kafka, OpenShift, IBM API Connect, nube, SRE/monitorización), detecta la tecnología automáticamente, pregunta el contexto que no puede inferir, y produce un reporte de diagnóstico estandarizado sin ocultar datos sensibles. Doc para humanos: [docs/log-reader.md](./docs/log-reader.md).
 
-- Ejemplo realista de cómo se ve un análisis final de un log de Quarkus
-- Sirve como referencia para el formato y nivel de detalle esperado en un reporte
+## Agentes
 
-## Principales características de estos agentes
+`agents/` está reservado para subagentes de Claude Code (roles independientes con su propio hilo de ejecución), distintos de los skills de arriba. Hoy está vacío; ver [agents/README.md](./agents/README.md) para el formato esperado cuando se agregue el primero.
 
-Cada agente incluye:
+## Convenciones del repo
 
-- propósito y alcance tecnológico
-- reglas para no asumir contexto sin evidencia
-- clasificación de severidades y tipos de fallo
-- manejo de datos sensibles y confidenciales
-- guía de análisis técnica
-- formato de reporte final
-- preguntas para aclarar contexto faltante
+Ver [CLAUDE.md](./CLAUDE.md) (también accesible como `AGENTS.md`) para las reglas de organización: cuándo algo va en `skills/` vs `agents/`, cuándo introducir subcarpetas de categoría dentro de `skills/`, y el checklist para agregar un skill nuevo.
 
-## Uso recomendado
+## Licencia
 
-Estos documentos pueden utilizarse como:
-
-1. base para construir agentes de IA o asistentes especializados
-2. referencia operativa para analistas de soporte técnico
-3. guía de diagnóstico para equipos de desarrollo, QA y operaciones
-4. plantilla de reportes para incidentes de producción
-
-## Convención de trabajo
-
-Los artefactos del repositorio están orientados a:
-
-- mantener análisis estructurado
-- separar hipótesis de diagnóstico confirmado
-- resaltar información sensible sin ocultarla
-- aportar próximos pasos específicos para la resolución
-
-## Nota importante
-
-Los archivos del repositorio contienen ejemplos y reglas de interpretación reales para entornos empresariales. En caso de trabajar con logs de producción, se recomienda revisar cuidadosamente los datos sensibles antes de compartirlos fuera del entorno seguro correspondiente.
-
-## Requisitos
-
-No se requiere una aplicación ni un framework de ejecución para este repositorio, ya que es una biblioteca/documentación de plantillas de análisis. El uso principal es como base para agentes, prompts o guías de diagnóstico.
-
-## Mantenimiento
-
-Este repositorio puede ampliarse con nuevos perfiles de agentes, por ejemplo:
-
-- logs de Kafka
-- logs de PostgreSQL / Oracle / SQL Server
-- logs de Spring Boot
-- logs de nginx / Apache / Tomcat
-- logs de Azure / AWS / GCP
-- agentes para monitorización y SRE
-
----
-
-Si quieres, también puedo dejarte una versión más formal de este README para GitHub, con badges, secciones de instalación, uso y referencias técnicas más profesionales.
+[MIT](./LICENSE)

@@ -1,0 +1,12 @@
+{
+  "name": "ia-tools",
+  "description": "Skills y agentes de contexto reutilizables entre distintos harnesses de IA (Claude Code, Codex y compatibles con Agent Skills).",
+  "version": "0.1.0",
+  "author": {
+    "name": "Ivan Firestone",
+    "url": "https://github.com/ifirestone"
+  },
+  "homepage": "https://github.com/ifirestone/ia-tools",
+  "repository": "https://github.com/ifirestone/ia-tools",
+  "license": "MIT"
+}
