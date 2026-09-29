@@ -13,9 +13,9 @@ Todo el contenido del repo va en español: `README.md`, este archivo, `docs/`, c
 
 No dupliques contenido entre ambas carpetas: si algo es una guía de referencia, va en `skills/<skill>/references/`, aunque el nombre "agente" se use coloquialmente para describirla.
 
-## Buckets dentro de `skills/`
+## Organización de `skills/`
 
-Hoy `skills/` no tiene subcarpetas de categoría (`engineering/`, `operaciones/`, etc.): con un solo skill, esas carpetas estarían vacías por adelantado. Crea una carpeta de categoría recién cuando haya **varios** skills que compartan ese tipo de trabajo, y en ese momento:
+Los skills se mantienen en una estructura plana: cada carpeta directamente dentro de `skills/` contiene un skill independiente. No crees subcarpetas de categoría (`engineering/`, `operaciones/`, etc.) hasta que haya **varios** skills que compartan esa categoría. Cuando llegue ese momento:
 
 - Mover los skills existentes que encajen a la carpeta nueva.
 - Cada carpeta de categoría lleva su propio `README.md` listando sus skills.
@@ -29,8 +29,8 @@ Preferí siempre el subconjunto portable del estándar Agent Skills: `name`, `de
 
 1. `skills/<skill>/SKILL.md` con frontmatter mínimo `name` + `description`.
 2. Si necesita contenido largo, `skills/<skill>/references/*.md`, cargado solo cuando aplique.
-3. Entrada en el listado de skills de `README.md`, enlazando al `SKILL.md`.
-4. Página en `docs/<skill>.md` con las cuatro secciones: Qué hace / Cuándo usarlo / Preguntas frecuentes / Cómo saber que funciona.
+3. Entrada en el catálogo de `README.md`, enlazando al `SKILL.md`.
+4. Si el skill necesita documentación orientada a usuarios, crear `docs/<skill>.md` con las secciones: Qué hace / Cuándo usarlo / Preguntas frecuentes / Cómo saber que funciona.
 5. Si el skill declara herramientas o metadata específicas del plugin, revisar que `.claude-plugin/plugin.json` siga siendo válido.
 
 ## Después de tocar `.claude-plugin/`
