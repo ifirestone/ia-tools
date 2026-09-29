@@ -9,7 +9,7 @@ Regla práctica para decidir dónde va algo nuevo:
 - Si es una **guía de referencia larga** para un tipo de tarea (cómo interpretar logs de Kafka, cómo hacer code review, etc.) → va dentro de `skills/<skill>/references/`, cargada solo cuando el skill la necesita.
 - Si es un **rol independiente** que conviene correr en su propio contexto, con su propia lista de herramientas permitidas y posiblemente su propio modelo → va acá, como `agents/<nombre>.md`.
 
-Hoy esta carpeta está vacía: los 11 documentos de análisis de logs que vivían acá (`agents/log-readers/`) eran en realidad guías de referencia, no roles independientes, así que se consolidaron en [`skills/log-reader/references/`](../skills/log-reader/references/) y el propio `agents/log-readers/` se borró por quedar duplicado.
+Hoy esta carpeta está vacía: los 11 documentos de análisis de logs que vivían acá (`agents/log-analyzers/`) eran en realidad guías de referencia, no roles independientes, así que se consolidaron en [`skills/log-analyzer/references/`](../skills/log-analyzer/references/) y el propio `agents/log-analyzers/` se borró por quedar duplicado.
 
 ## Formato esperado
 

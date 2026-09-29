@@ -1,20 +1,20 @@
-# log-reader
+# log-analyzer
 
 ## Qué hace
 
-`log-reader` es un skill de análisis de logs que reemplaza a un conjunto de agentes especializados (uno por tecnología) por un único flujo. Cuando se le pega o adjunta un log, stack trace, evento de Windows o alerta de monitorización:
+`log-analyzer` es un skill de análisis de logs que reemplaza a un conjunto de agentes especializados (uno por tecnología) por un único flujo. Cuando se le pega o adjunta un log, stack trace, evento de Windows o alerta de monitorización:
 
 1. Detecta automáticamente la tecnología a partir de patrones en el propio texto (Windows Event Log, nginx/Apache/Tomcat/IIS, Spring Boot, Quarkus, .NET/C#, PHP, Laravel, bases de datos, Kafka, Docker, Kubernetes/OpenShift, IBM API Connect, MinIO, Azure/AWS/GCP, o alertas SRE).
 2. Si hay ambigüedad, pregunta antes de analizar en vez de adivinar.
-3. Carga únicamente la guía de referencia de esa tecnología (`skills/log-reader/references/<tecnologia>.md`), no las 11 de una vez.
+3. Carga únicamente la guía de referencia de esa tecnología (`skills/log-analyzer/references/<tecnologia>.md`), no las 11 de una vez.
 4. Pregunta el contexto que no se puede inferir del texto (entorno, versión, rol del componente, si el log está truncado).
 5. Produce un reporte técnico estandarizado, con datos sensibles marcados en rojo en vez de ocultos.
 
-Ver el flujo completo en [`skills/log-reader/SKILL.md`](../skills/log-reader/SKILL.md).
+Ver el flujo completo en [`skills/log-analyzer/SKILL.md`](../skills/log-analyzer/SKILL.md).
 
 ## Cuándo usarlo
 
-Se activa solo, sin necesidad de invocarlo con `/log-reader`, cada vez que en la conversación aparece:
+Se activa solo, sin necesidad de invocarlo con `/log-analyzer`, cada vez que en la conversación aparece:
 
 - Un log pegado o adjunto de cualquiera de las tecnologías cubiertas.
 - Un stack trace o excepción.

@@ -1,5 +1,5 @@
 ---
-name: log-reader
+name: log-analyzer
 description: Analiza logs pegados o adjuntos de cualquier stack técnico (Windows Event Log, servidores web nginx/Apache/Tomcat/IIS, Spring Boot, Quarkus, .NET/C#, PHP, Laravel, bases de datos PostgreSQL/Oracle/SQL Server, Kafka, Kubernetes/OpenShift, IBM API Connect, MinIO, Docker, nube Azure/AWS/GCP, o alertas/monitorización SRE) y produce un diagnóstico técnico estructurado. Detecta automáticamente la tecnología a partir de patrones en el propio log, pregunta por el contexto que no puede inferirse (entorno, versión, rol del servidor, etc.) antes de diagnosticar, y marca en rojo cualquier dato sensible sin ocultarlo. Usar siempre que el usuario pegue o adjunte un log, stack trace, evento de Windows, alerta de Prometheus/PagerDuty, o pida "analiza este log", "qué significa este error", "por qué falla este servicio/pod/aplicación", aunque no mencione explícitamente la tecnología.
 ---
 
