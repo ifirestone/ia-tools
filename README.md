@@ -13,8 +13,7 @@ Los archivos de `agents/` son subagentes de Claude Code: roles independientes co
 Como plugin, registrando este repo como su propio marketplace:
 
 ```bash
-claude plugin marketplace add ifirestone/ia-tools
-claude plugin install ia-tools
+/plugin install ia-tools --marketplace ifirestone/ia-tools
 ```
 
 El plugin incluye tanto los skills como los agentes de `agents/`.
