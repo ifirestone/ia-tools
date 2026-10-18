@@ -6,10 +6,10 @@ Es distinta de [`skills/`](../skills/), que contiene instrucciones que se cargan
 
 ## Agentes actuales
 
-- [`iron-communications.md`](./iron-communications.md): comunicaciones corporativas internas y externas.
-- [`iron-meetings.md`](./iron-meetings.md): elaboración de minutas fieles a notas y transcripciones.
-- [`iron-task-manager.md`](./iron-task-manager.md): decisiones, tareas, riesgos y minutas accionables.
-- [`iron-translator.md`](./iron-translator.md): traducción, corrección, tono y aprendizaje de idiomas.
+- [`iron-communications.md`](../agents/iron-communications.md): comunicaciones corporativas internas y externas.
+- [`iron-meetings.md`](../agents/iron-meetings.md): elaboración de minutas fieles a notas y transcripciones.
+- [`iron-task-manager.md`](../agents/iron-task-manager.md): decisiones, tareas, riesgos y minutas accionables.
+- [`iron-translator.md`](../agents/iron-translator.md): traducción, corrección, tono y aprendizaje de idiomas.
 
 ## Cómo elegir
 

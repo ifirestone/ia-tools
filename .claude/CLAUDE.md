@@ -9,7 +9,7 @@ Todo el contenido del repo va en español: `README.md`, este archivo, `docs/`, c
 ## `skills/` vs `agents/`
 
 - `skills/<skill>/SKILL.md`: instrucciones reusables para una tarea. Se invocan con `/nombre` o el modelo las carga solo cuando el `description` del frontmatter matchea la conversación. El contenido de referencia largo (guías por tecnología, checklists extensas) va en `skills/<skill>/references/`, no en el `SKILL.md` principal, para no cargarlo todo de una.
-- `agents/<nombre>.md`: subagentes de Claude Code, roles independientes con su propio hilo, herramientas permitidas y modelo. Ver [`agents/README.md`](agents/README.md).
+- `agents/<nombre>.md`: subagentes de Claude Code, roles independientes con su propio hilo, herramientas permitidas y modelo. Ver [`docs/agentes.md`](../docs/agentes.md).
 
 No dupliques contenido entre ambas carpetas: si algo es una guía de referencia, va en `skills/<skill>/references/`, aunque el nombre "agente" se use coloquialmente para describirla.
 

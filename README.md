@@ -77,7 +77,7 @@ Los cuatro archivos de `agents/` definen subagentes de Claude Code, distintos de
 - **[iron-task-manager](./agents/iron-task-manager.md)**: extracción de decisiones, tareas, riesgos y minutas accionables.
 - **[iron-translator](./agents/iron-translator.md)**: traducción, corrección, ajuste de tono y práctica de idiomas.
 
-Están escritos para equipos hispanohablantes y son plantillas genéricas: ajusta tono, guías de marca y formato a tu organización. Consulta [agents/README.md](./agents/README.md) para conocer el formato y los criterios para agregar agentes.
+Están escritos para equipos hispanohablantes y son plantillas genéricas: ajusta tono, guías de marca y formato a tu organización. Consulta [docs/agentes.md](./docs/agentes.md) para conocer el formato y los criterios para agregar agentes.
 
 ## Seguridad y datos sensibles
 
@@ -85,7 +85,7 @@ Los skills `log-analyzer*` **no ocultan** credenciales, tokens ni datos personal
 
 ## Convenciones del repo
 
-Ver [CLAUDE.md](./CLAUDE.md) (también accesible como `AGENTS.md`) para las reglas de organización: cuándo algo va en `skills/` vs `agents/`, cuándo introducir subcarpetas de categoría dentro de `skills/`, y el checklist para agregar un skill nuevo.
+Ver [.claude/CLAUDE.md](./.claude/CLAUDE.md) (también accesible como `AGENTS.md`) para las reglas de organización: cuándo algo va en `skills/` vs `agents/`, cuándo introducir subcarpetas de categoría dentro de `skills/`, y el checklist para agregar un skill nuevo.
 
 ## Licencia
 
