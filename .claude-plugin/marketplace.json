@@ -1,0 +1,15 @@
+{
+  "name": "ia-tools",
+  "description": "Marketplace de un solo plugin: skills y agentes de contexto reutilizables entre distintos harnesses de IA.",
+  "owner": {
+    "name": "Ivan Firestone",
+    "url": "https://github.com/ifirestone"
+  },
+  "plugins": [
+    {
+      "name": "ia-tools",
+      "source": "./",
+      "description": "Skills y agentes de contexto reutilizables entre distintos harnesses de IA (Claude Code, Codex y compatibles con Agent Skills)."
+    }
+  ]
+}

@@ -1,0 +1,52 @@
+# macOS
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+
+# Linux
+.directory
+.Trash-*
+.nfs*
+
+# Windows
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
+Desktop.ini
+$RECYCLE.BIN/
+*.lnk
+
+# Editores
+### VisualStudioCode ###
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+!.vscode/*.code-snippets
+
+# Local History for Visual Studio Code
+.history/
+
+# Built Visual Studio Code Extensions
+*.vsix
+
+### VisualStudioCode Patch ###
+.ionide
+
+### JetBrains ###
+.idea/
+
+# Vim/Emacs swap files
+*.swp
+*.swo
+*~
+
+# Skills empaquetados (artefacto derivable de skills/<nombre>/ con `claude plugin`
+# o zip manual; no se versiona junto al SKILL.md fuente)
+*.skill
+
+# Node, por si algún script de mantenimiento suma dependencias más adelante
+node_modules/
